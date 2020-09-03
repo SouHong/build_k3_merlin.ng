@@ -1,4 +1,4 @@
-name: build rt-k3-mainline
+name: build k3-mainline
 
 
 on: 
@@ -15,9 +15,9 @@ on:
     types: [started]
     
 env:
-  ET0MACADDR: "00:11:22:33:44:55"    
-  MACADDR1_24G: "00:11:22:33:44:66"
-  MACADDR2_5G: "00:11:22:33:44:77"
+  ET0MACADDR: "FC:7C:02:DE:8E:88"    
+  MACADDR1_24G: "FC:7C:02:DE:8E:88"
+  MACADDR2_5G: "FC:7C:02:DE:8E:8A"
 
 jobs:
   build:
@@ -64,8 +64,8 @@ jobs:
     - name: Clone source code
       run: |       
         #git clone https://github.com/RMerl/asuswrt-merlin
-        git clone https://github.com/godcong/asuswrt-merlin.ng
-        git clone https://github.com/godcong/k3screenctrl asuswrt-merlin.ng/release/src/router/k3screenctrl 
+        git clone https://github.com/SouHong/asuswrt-merlin.ng
+        git clone https://github.com/SouHong/k3screenctrl asuswrt-merlin.ng/release/src/router/k3screenctrl 
         git clone https://github.com/RMerl/am-toolchains.git
                 
         sudo mkdir -p /media/asuswrt/
@@ -111,7 +111,6 @@ jobs:
       run: |
         #export PATH=$PATH:/opt/brcm/hndtools-mipsel-linux/bin:/opt/brcm/hndtools-mipsel-uclibc/bin:
         export PATH=$PATH:/opt/brcm-arm/bin
-
         cd  /media/asuswrt/asuswrt-merlin.ng/release/src-rt
         echo "add tag to version"
         sed -i 's/EXTENDNO=.*/&_${{ env.MERLIN_TAG }}/g' version.conf
@@ -139,7 +138,6 @@ jobs:
         #sudo cp /media/asuswrt/asuswrt-merlin.ng/release/src-rt/version.conf /opt/images/
         
         sha256sum /opt/images/* > /opt/images/checksum.txt
-
     - name: Create Release
       id: create_release
       uses: ncipollo/release-action@v1
@@ -152,7 +150,7 @@ jobs:
         tag: ${{ env.BUILD_DATE }}_mainline_k3_${{ env.MERLIN_TAG }}
         body: |
           this is only a latest build from mainline
-          version: https://github.com/godcong/asuswrt-merlin.ng/commit/${{ env.MERLIN_VERSION }}
+          version: https://github.com/SouHong/asuswrt-merlin.ng/commit/${{ env.MERLIN_VERSION }}
         token: ${{ secrets.GITHUB_TOKEN }}
         draft: false
         prerelease: false
